@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-// =============================================================================
-// PROJECT 19: Simple Subscription - Monthly subscription payments
-// =============================================================================
 
 contract SimpleSubscription {
     struct Subscription {
