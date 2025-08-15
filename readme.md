@@ -1,35 +1,44 @@
 
+
 # 📄 Simple Subscription Smart Contract
 
-A Solidity-based monthly subscription payment system that allows users to subscribe, renew, and cancel their subscriptions while enabling the contract owner to manage funds.
+A Solidity-based **monthly subscription payment system** that lets users subscribe, renew, and cancel their subscriptions, while giving the contract owner full control over fund withdrawals.
 
 ---
 
 ## 📌 Overview
 
-This contract enables:
+The contract is designed to manage **recurring subscription payments** on-chain, using ETH as the payment method.
 
-* Users to **subscribe** by paying a fixed monthly fee.
-* Users to **renew** subscriptions each month.
-* Users to **cancel** subscriptions anytime.
-* The contract owner to **withdraw** accumulated funds.
+**Key capabilities:**
+
+* **Users** can:
+
+  * Subscribe by paying a fixed monthly fee.
+  * Renew their subscription each month.
+  * Cancel their subscription at any time.
+* **Owner** can:
+
+  * Withdraw accumulated funds.
+  * Set subscription price during deployment.
 
 **Deployed & Verified on Base Sepolia:**
-[0x6aCe5ff3dBFb1a9Be27C21eC3db9d39f2dC07655](https://sepolia.basescan.org/address/0x6aCe5ff3dBFb1a9Be27C21eC3db9d39f2dC07655#code)
+`0x6aCe5ff3dBFb1a9Be27C21eC3db9d39f2dC07655`
+🔍 [View Contract on BaseScan](https://sepolia.basescan.org/address/0x6aCe5ff3dBFb1a9Be27C21eC3db9d39f2dC07655#code) ✅
 
 ---
 
 ## ⚙️ Features
 
-* **One-time monthly fee** stored on deployment.
-* **Renewal system** based on timestamps (`30 days` cycle).
-* **Active status check** via `isSubscriptionValid` function.
-* **Event logging** for all major actions:
+* **Fixed Monthly Fee** — Price set at deployment in **wei**.
+* **Automatic Expiration** — Subscriptions expire after **30 days** unless renewed.
+* **Active Subscription Check** — Verify subscription status anytime via `isSubscriptionValid`.
+* **Event Logging** — All major actions emit events for easy tracking:
 
   * `SubscriptionCreated`
   * `PaymentMade`
   * `SubscriptionCancelled`
-* **Owner-only withdrawal** of contract balance.
+* **Owner Fund Control** — Only the owner can withdraw ETH from the contract.
 
 ---
 
@@ -38,111 +47,103 @@ This contract enables:
 ### Requirements
 
 * Solidity `^0.8.19`
-* Base Sepolia network connection (via MetaMask, Hardhat, or Foundry)
-* ETH balance for deployment gas fees
+* Base Sepolia network connection (MetaMask, Hardhat, or Foundry)
+* ETH for gas fees
 
-### Steps
-
-1. Clone this repository.
-2. Deploy using Remix, Hardhat, or Foundry with:
-
-   ```solidity
-   constructor(uint256 _price)
-   ```
-
-   where `_price` is the monthly subscription fee in wei.
-
-Example:
+### Deployment Example
 
 ```solidity
+// Deploy with a monthly price of 0.01 ETH
 SimpleSubscription subscription = new SimpleSubscription(0.01 ether);
 ```
+
+**Constructor:**
+
+```solidity
+constructor(uint256 _price)
+```
+
+* `_price` — Monthly subscription fee in wei.
 
 ---
 
 ## 📜 Functions
 
-### **subscribe()**
-
-Subscribe to the service by sending the exact subscription fee.
+### **subscribe()** — Create a new subscription
 
 ```solidity
 function subscribe() external payable
 ```
 
-* **Requires**: `msg.value == subscriptionPrice`
-* **Emits**: `SubscriptionCreated`
+* **Requires:** `msg.value == subscriptionPrice`
+* **Emits:** `SubscriptionCreated`
 
 ---
 
-### **renewSubscription()**
-
-Renew subscription for another month.
+### **renewSubscription()** — Extend subscription for 30 days
 
 ```solidity
 function renewSubscription() external payable
 ```
 
-* **Requires**: Active subscription & correct payment.
-* **Emits**: `PaymentMade`
+* **Requires:** Active subscription & exact payment.
+* **Emits:** `PaymentMade`
 
 ---
 
-### **cancelSubscription()**
-
-Cancel current subscription.
+### **cancelSubscription()** — End subscription early
 
 ```solidity
 function cancelSubscription() external
 ```
 
-* **Requires**: Active subscription.
-* **Emits**: `SubscriptionCancelled`
+* **Requires:** Active subscription.
+* **Emits:** `SubscriptionCancelled`
 
 ---
 
-### **isSubscriptionValid(address subscriber)**
-
-Check if a subscription is active and within the last 30 days.
+### **isSubscriptionValid(address subscriber)** — Check subscription status
 
 ```solidity
 function isSubscriptionValid(address subscriber) external view returns (bool)
 ```
 
+* Returns `true` if active within the last 30 days.
+
 ---
 
-### **withdraw()**
-
-Withdraw all contract funds (owner only).
+### **withdraw()** — Owner-only fund withdrawal
 
 ```solidity
 function withdraw() external
 ```
 
+* **Access:** Only contract owner.
+
 ---
 
 ## 🧪 Testing
 
-To test locally using Hardhat:
+Run tests locally using Hardhat:
 
 ```bash
 npm install
 npx hardhat test
 ```
 
-Example test scenarios:
+**Example test cases:**
 
-* User subscribes successfully.
-* Subscription renewal after 30 days.
-* Cancelling a subscription.
-* Owner withdrawal.
+* ✅ Successful subscription creation.
+* ✅ Renewal after expiration period.
+* ✅ Cancellation by user.
+* ✅ Owner fund withdrawal.
 
 ---
 
 ## 🔍 Verification
 
-Contract is **verified** on Base Sepolia:
-[Base Sepolia Contract Link](https://sepolia.basescan.org/address/0x6aCe5ff3dBFb1a9Be27C21eC3db9d39f2dC07655#code)
+Contract verified on Base Sepolia:
+[View on BaseScan](https://sepolia.basescan.org/address/0x6aCe5ff3dBFb1a9Be27C21eC3db9d39f2dC07655#code)
 
 ---
 
